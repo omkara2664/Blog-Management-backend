@@ -1,3 +1,4 @@
+const blogModel = require("../models/blog.model");
 const getBlogs = async (req, res) => {
     res.status(200).send("All blogs");
 }
