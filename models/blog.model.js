@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const blogsSchema = new mongoose.Schema({
     userId: { type: mongoose.SchemaTypes.ObjectId, ref: "User" },
-    titel: { type: String, require: true },
+    title: { type: String, require: true },
     description: { type: String, require: true },
     category: { type: String, require: true },
     tags: [String],
