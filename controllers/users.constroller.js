@@ -18,7 +18,8 @@ const getAllUsers = async (req, res) => {
         resourse: req.originalUrl,
     };
     try {
-        const users = await userModel.find({});
+        const users = await userModel.find({
+        });
         response.data = { users };
         return res.status(200).json(response);
     } catch (error) {
@@ -100,9 +101,9 @@ const createUser = async (req, res) => {
         const isEmailExist = await userModel.findOne({
             email: user.email,
         });
+        console.log(isEmailExist);
         if (isEmailExist)
             throw new Error(`This email ${user.email} id is already registered.`)
-
     } catch (error) {
         return res.status(400).json({
             success: false,

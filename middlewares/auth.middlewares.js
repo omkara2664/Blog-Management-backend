@@ -9,7 +9,7 @@ const authMiddleware = async (req, res, next) => {
         return res.status(401).json({
             success: false,
             code: 401,
-            message: 'Unauthorized access, missing authorization information',
+            message: `Unauthorized access, missing authorization information`,
             data: null,
             error: null,
         })
@@ -20,7 +20,7 @@ const authMiddleware = async (req, res, next) => {
         return res.status(401).json({
             success: false,
             code: 401,
-            message: 'Unauthorized access, authorization information is not in a valid format',
+            message: `Unauthorized access,${bearer} + ${token}authorization information is not in a valid format`,
             data: null,
             error: null,
         })

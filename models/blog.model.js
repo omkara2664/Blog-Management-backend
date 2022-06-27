@@ -5,7 +5,7 @@ const blogsSchema = new mongoose.Schema({
     title: { type: String, require: true },
     description: { type: String, require: true },
     category: { type: String, require: true },
-    tags: [String],
+    // tags: [String],
     createdAt: { type: Date, defalut: new Date() },
     modifiedAt: { type: Date, defalut: new Date() },
     isDeleted: { type: Boolean, default: false },

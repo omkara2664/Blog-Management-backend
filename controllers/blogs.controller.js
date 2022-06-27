@@ -23,6 +23,17 @@ const getAllBlogs = async (req, res) => {
             isDeleted: false,
             userId: res.locals.userId,
         });
+        // console.log(typeof blogs);
+        if (blogs.length === 0) {
+            return res.status(403).json({
+                success: false,
+                code: 403,
+                message: "User Dosent Created any Blogs till now.",
+                data: null,
+                error: null,
+                resource: req.originalUrl,
+            });
+        }
         response.data = { blogs };
         return res.status(200).json(response);
     } catch (error) {
@@ -35,9 +46,9 @@ const getAllBlogs = async (req, res) => {
 
 const getByCategory = async (req, res) => {
     const category = req.params.category;
-    console.log(category);
-    const isCategoryExist = await blogsModel.find({ userId: res.locals.userId, category: category, isDeleted: false })
-    if (!isCategoryExist) {
+    // console.log(category);
+    const blogs = await blogsModel.find({ userId: res.locals.userId, category: category, isDeleted: false })
+    if (blogs.length === 0) {
         return res.status(403).json({
             success: false,
             code: 403,
@@ -51,13 +62,37 @@ const getByCategory = async (req, res) => {
         success: true,
         code: 200,
         message: "Blogs list based on category for authenticate owner.",
-        data: { isCategoryExist },
+        data: { blogs },
         error: null,
         resource: req.originalUrl,
     })
 
 }
 
+const getBlogById = async (req, res) => {
+    const blogId = req.params.id;
+    // console.log(blogId);
+    const response = {
+        success: true,
+        code: 200,
+        message: "Blog list",
+        error: null,
+        data: null,
+        resourse: req.originalUrl,
+    };
+    try {
+        const blog = await blogsModel.findOne({ _id: blogId });
+        console.log(blog);
+        if (!blog) throw new Error("Blog does not exist");
+        response.data = { blog };
+        return res.status(200).json(response);
+    } catch (error) {
+        response.error = error;
+        response.message = error.message;
+        response.code = error.code ? error.code : 500;
+        return res.status(500).json(response);
+    }
+};
 const createBlogs = async (req, res) => {
     const blogs = req.body
     // console.log(blogs);
@@ -69,6 +104,7 @@ const createBlogs = async (req, res) => {
         data: null,
         resourse: req.originalUrl,
     }
+    console.log(isValidObject(blogs));
     if (!isValid(blogs) && !isValidObject(blogs)) {
         response.success = false;
         response.code = 400;
@@ -93,8 +129,8 @@ const createBlogs = async (req, res) => {
     if (!isValid(blogs.title) || (isValid(blogs.title) && !isValidString(blogs.title))) {
         response.success = false;
         response.code = 400;
-        response.message = "Invalid request data.title is reqired";
-        response.error = "Invalid request data.title is reqired";
+        response.message = "Invalid request data. Blog title is reqired";
+        response.error = "Invalid request data. Blog title is reqired";
         return res.status(400).json(response);
     }
     try {
@@ -103,7 +139,7 @@ const createBlogs = async (req, res) => {
             title: blogs.title.trim(),
             description: blogs.description,
             category: blogs.category,
-            tags: blogs.tags,
+            // tags: blogs.tags,s
             // isDeleted: false,
         });
         console.log("hello");
@@ -120,7 +156,7 @@ const updateBlog = async (req, res) => {
     const blogId = req.params.id;
     // console.log(blogId);
     const blogData = req.body;
-    if (!(blogData) || (isValid(blogData) && !isValidObject(blogData))) {
+    if (!blogData || (isValid(blogData) && !isValidObject(blogData))) {
         return res.status(400).json({
             success: false,
             code: 400,
@@ -235,4 +271,5 @@ module.exports = {
     updateBlog,
     deleteBlog,
     getByCategory,
+    getBlogById,
 }
