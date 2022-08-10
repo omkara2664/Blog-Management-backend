@@ -170,7 +170,27 @@ const updateBlog = async (req, res) => {
         return res.status(400).json({
             success: false,
             code: 400,
-            message: "Empty Blog title, nothing to update.",
+            message: "Empty Blog title, not allowed.",
+            error: null,
+            data: null,
+            resource: req.originalUrl,
+        });
+    }
+    if (!isValid(blogData.description) || isValid(blogData.description) && !isValidString(blogData.description)) {
+        return res.status(400).json({
+            success: false,
+            code: 400,
+            message: "Empty Blog description, not allowed.",
+            error: null,
+            data: null,
+            resource: req.originalUrl,
+        });
+    }
+    if (!isValid(blogData.category) || isValid(blogData.category) && !isValidString(blogData.category)) {
+        return res.status(400).json({
+            success: false,
+            code: 400,
+            message: "Empty Blog Category, not allowed.",
             error: null,
             data: null,
             resource: req.originalUrl,
